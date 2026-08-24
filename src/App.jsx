@@ -159,7 +159,7 @@ const UserForm = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#f4f6f5', minHeight: '100vh', padding: '30px 15px' }}>
+    <div style={{ backgroundColor: '#f4f6f5', minHeight: '100vh', padding: '16px 8px', boxSizing: 'border-box' }}>
       <div ref={topRef} />
 
       {/* Snackbar thông báo */}
@@ -175,8 +175,8 @@ const UserForm = () => {
 
       {/* Modal xác nhận */}
       {showConfirmModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 999 }}>
-          <div style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '8px', width: '90%', maxWidth: '400px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 999, padding: '15px', boxSizing: 'border-box' }}>
+          <div style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '8px', width: '100%', maxWidth: '400px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', boxSizing: 'border-box' }}>
             <h3 style={{ margin: '0 0 10px 0', fontSize: '18px', color: '#333' }}>Xác nhận / Confirmation</h3>
             <p style={{ margin: '0 0 20px 0', color: '#666', fontSize: '14px', lineHeight: '1.5' }}>Bạn chưa đính kèm hình ảnh. Bạn có muốn tiếp tục không? / No images attached. Do you want to continue?</p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
@@ -188,19 +188,19 @@ const UserForm = () => {
       )}
 
       {/* Form Container chính */}
-      <div style={{ width: '100%', maxWidth: '650px', margin: '0 auto', backgroundColor: '#ffffff', padding: '32px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', textAlign: 'left' }}>
+      <div style={{ width: '100%', maxWidth: '650px', margin: '0 auto', backgroundColor: '#ffffff', padding: '20px 16px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', textAlign: 'left', boxSizing: 'border-box' }}>
         
-        {/* Logo & Tiêu đề giữ căn giữa cho đẹp */}
+        {/* Logo & Tiêu đề giữ căn giữa */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
-          <img src={kohyoungLogo} alt="Kohyoung Logo" style={{ height: '45px', objectFit: 'contain' }} />
+          <img src={kohyoungLogo} alt="Kohyoung Logo" style={{ height: '40px', objectFit: 'contain' }} />
         </div>
 
-        <h2 style={{ textAlign: 'center', color: '#2c3e50', fontWeight: 'bold', marginBottom: '6px', fontSize: '22px' }}>
+        <h2 style={{ textAlign: 'center', color: '#2c3e50', fontWeight: 'bold', marginBottom: '6px', fontSize: '20px' }}>
           KYV Helpdesk <span style={{ color: '#6CBC6C' }}>Web Submit Form</span>
         </h2>
 
-        <div style={{ marginBottom: '28px', textAlign: 'center' }}>
-          <span style={{ fontSize: '12px', color: '#7f8c8d', fontStyle: 'italic' }}>
+        <div style={{ marginBottom: '24px', textAlign: 'center' }}>
+          <span style={{ fontSize: '11px', color: '#7f8c8d', fontStyle: 'italic', display: 'block', padding: '0 5px' }}>
             * là phần bắt buộc phải điền / Required fields / *표시된 항목은 필수 입력 항목입니다
           </span>
         </div>
@@ -212,7 +212,7 @@ const UserForm = () => {
               <span style={{ fontSize: '13px', color: '#666', fontWeight: '500' }}>Review Information</span>
             </div>
 
-            <div style={{ marginBottom: '20px', padding: '16px', backgroundColor: '#f9f9f9', borderRadius: '8px', border: '1px solid #e0e0e0' }}>
+            <div style={{ marginBottom: '20px', padding: '14px', backgroundColor: '#f9f9f9', borderRadius: '8px', border: '1px solid #e0e0e0', wordBreak: 'break-word', boxSizing: 'border-box' }}>
               <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Tên người yêu cầu / Requester:</b> {formData.requester}</div>
               <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Tên công ty / Company:</b> {formData.company}</div>
               <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Email:</b> {formData.email}</div>
@@ -251,17 +251,17 @@ const UserForm = () => {
           <div>
             <div style={{ marginBottom: '18px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Tên người yêu cầu (Requester) *</label>
-              <input type="text" value={formData.requester} onChange={(e) => handleChange('requester', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none' }} />
+              <input type="text" value={formData.requester} onChange={(e) => handleChange('requester', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none', fontSize: '16px' }} />
             </div>
 
             <div style={{ marginBottom: '18px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Tên công ty (Company) *</label>
-              <input type="text" value={formData.company} onChange={(e) => handleChange('company', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none' }} />
+              <input type="text" value={formData.company} onChange={(e) => handleChange('company', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none', fontSize: '16px' }} />
             </div>
 
             <div style={{ marginBottom: '18px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Email *</label>
-              <input type="email" value={formData.email} onChange={(e) => handleChange('email', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none' }} />
+              <input type="email" value={formData.email} onChange={(e) => handleChange('email', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none', fontSize: '16px' }} />
               <span style={{ fontSize: '11px', color: '#666', fontStyle: 'italic', marginTop: '4px', display: 'block' }}>
                 * Vui lòng dùng email thật để nhận phản hồi kịp thời / Please use a valid email for timely feedback.
               </span>
@@ -269,7 +269,7 @@ const UserForm = () => {
 
             <div style={{ marginBottom: '18px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Serial Number Máy (Machine Serial Number)</label>
-              <input type="text" value={formData.serialNumber} onChange={(e) => handleChange('serialNumber', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none' }} />
+              <input type="text" value={formData.serialNumber} onChange={(e) => handleChange('serialNumber', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none', fontSize: '16px' }} />
             </div>
 
             <div style={{ marginBottom: '18px' }}>
@@ -292,7 +292,7 @@ const UserForm = () => {
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {imagePreviews.map((src, index) => (
-                  <div key={index} style={{ position: 'relative', width: '80px', height: '80px', display: 'inline-block' }}>
+                  <div key={index} style={{ position: 'relative', width: '70px', height: '70px', display: 'inline-block' }}>
                     <img src={src} alt={`upload-${index}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px', border: '1px solid #ddd' }} />
                     <button type="button" onClick={() => handleRemoveImage(index)} style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', lineHeight: '18px', textAlign: 'center', fontSize: '12px' }}>×</button>
                   </div>
@@ -305,7 +305,7 @@ const UserForm = () => {
                 type="checkbox" 
                 checked={formData.isMesRelated} 
                 onChange={(e) => handleChange('isMesRelated', e.target.checked)}
-                style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#6CBC6C', marginTop: '2px' }}
+                style={{ width: '20px', height: '20px', cursor: 'pointer', accentColor: '#6CBC6C', marginTop: '2px', flexShrink: 0 }}
               />
               <span style={{ fontSize: '13px', fontWeight: '500', color: '#333', lineHeight: '1.4' }}>
                 Có phải liên quan tới MES không / MES issue? (KY-MES, BRM, SECGEM, kbr AutoExport, API)
@@ -314,7 +314,7 @@ const UserForm = () => {
 
             <div style={{ marginBottom: '18px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Tiêu đề vấn đề (Subject) *</label>
-              <input type="text" value={formData.subject} onChange={(e) => handleChange('subject', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none' }} />
+              <input type="text" value={formData.subject} onChange={(e) => handleChange('subject', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none', fontSize: '16px' }} />
             </div>
 
             <div style={{ marginBottom: '24px' }}>
@@ -324,14 +324,14 @@ const UserForm = () => {
                 onChange={(e) => handleChange('note', e.target.value)} 
                 rows={4}
                 placeholder="Vui lòng mô tả chi tiết vấn đề, yêu cầu và câu hỏi bạn gặp phải..."
-                style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', fontFamily: 'inherit', outline: 'none', resize: 'vertical' }}
+                style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', fontFamily: 'inherit', outline: 'none', resize: 'vertical', fontSize: '16px' }}
               />
             </div>
 
             <button 
               type="button" 
               onClick={handleSubmit} 
-              style={{ width: '100%', padding: '13px', backgroundColor: '#6CBC6C', color: '#ffffff', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '15px', transition: 'background 0.2s' }}
+              style={{ width: '100%', padding: '13px', backgroundColor: '#6CBC6C', color: '#ffffff', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '15px' }}
             >
               Gửi / Submit
             </button>
