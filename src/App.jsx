@@ -18,6 +18,9 @@ const UserForm = () => {
   const [isReviewing, setIsReviewing] = useState(false);
   const [snackbar, setSnackbar] = useState({ show: false, text: '', type: '' });
   
+  // State lưu thông tin ticket trả về từ server để hiển thị sau khi gửi thành công
+  const [submittedTicket, setSubmittedTicket] = useState(null);
+  
   const topRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -133,7 +136,23 @@ const UserForm = () => {
         throw new Error(`Server error (${response.status}): ${responseText}`);
       }
 
+      // Parse JSON trả về từ Worker để lấy mã ticket và đường dẫn
+      let resultData = {};
+      try {
+        resultData = JSON.parse(responseText);
+      } catch (e) {
+        console.warn("Không parse được JSON từ response text");
+      }
+
+      // Lưu lại thông tin ticket để hiển thị màn hình thành công
+      setSubmittedTicket({
+        ticketNumber: resultData.ticketNumber || 'N/A',
+        ticketUrl: resultData.ticketUrl || ''
+      });
+
       showSnackbarMsg('Gửi thông tin thành công / Submission successful!', 'success');
+      
+      // Reset form trạng thái
       setFormData({ subject: '', requester: '', company: '', serialNumber: '', email: '', note: '', isMesRelated: false, images: [] });
       setImagePreviews([]);
       setIsReviewing(false);
@@ -156,6 +175,11 @@ const UserForm = () => {
       setIsReviewing(true);
       setTimeout(scrollToTop, 50);
     }
+  };
+
+  const handleResetForm = () => {
+    setSubmittedTicket(null);
+    scrollToTop();
   };
 
   return (
@@ -205,7 +229,35 @@ const UserForm = () => {
           </span>
         </div>
 
-        {isReviewing ? (
+        {submittedTicket ? (
+          /* MÀN HÌNH HIỂN THỊ KHI GỬI THÀNH CÔNG (CÓ TICKET) */
+          <div style={{ textAlign: 'center', padding: '20px 0' }}>
+            <div style={{ fontSize: '48px', marginBottom: '10px' }}>🎉</div>
+            <h3 style={{ color: '#27ae60', marginBottom: '8px' }}>Gửi yêu cầu thành công!</h3>
+            <p style={{ color: '#666', fontSize: '14px', marginBottom: '20px' }}>Yêu cầu hỗ trợ của bạn đã được ghi nhận vào hệ thống Helpdesk.</p>
+            
+            <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', marginBottom: '24px', textAlign: 'left' }}>
+              <div style={{ marginBottom: '10px', fontSize: '14px' }}>
+                <b>Mã Ticket / Ticket Number:</b> <span style={{ color: '#2563eb', fontWeight: 'bold' }}>{submittedTicket.ticketNumber}</span>
+              </div>
+              {submittedTicket.ticketUrl ? (
+                <div style={{ fontSize: '14px', wordBreak: 'break-all' }}>
+                  <b>Đường dẫn Ticket / Link:</b> <a href={submittedTicket.ticketUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>Xem chi tiết Ticket trên SharePoint/List</a>
+                </div>
+              ) : (
+                <div style={{ fontSize: '13px', color: '#888', fontStyle: 'italic' }}>Đang khởi tạo liên kết ticket...</div>
+              )}
+            </div>
+
+            <button 
+              onClick={handleResetForm}
+              style={{ width: '100%', padding: '12px', backgroundColor: '#6CBC6C', color: '#ffffff', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '15px' }}
+            >
+              Gửi yêu cầu khác / Submit Another Request
+            </button>
+          </div>
+        ) : isReviewing ? (
+          /* MÀN HÌNH REVIEW TRƯỚC KHI GỬI */
           <div>
             <div style={{ marginBottom: '16px', textAlign: 'center' }}>
               <h3 style={{ color: '#333', fontWeight: 'bold', marginBottom: '4px' }}>Kiểm tra lại thông tin</h3>
@@ -248,6 +300,7 @@ const UserForm = () => {
             </div>
           </div>
         ) : (
+          /* MÀN HÌNH FORM NHẬP LIỆU CHÍNH */
           <div>
             <div style={{ marginBottom: '18px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Tên người yêu cầu (Requester) *</label>
