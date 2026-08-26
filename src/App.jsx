@@ -16,10 +16,12 @@ const UserForm = () => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isReviewing, setIsReviewing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [snackbar, setSnackbar] = useState({ show: false, text: '', type: '' });
   
-  // State lưu thông tin ticket trả về từ server để hiển thị sau khi gửi thành công
+  // State lưu thông tin ticket trả về từ server
   const [submittedTicket, setSubmittedTicket] = useState(null);
+  const [copied, setCopied] = useState(false);
   
   const topRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -108,6 +110,9 @@ const UserForm = () => {
   };
 
   const executeSubmit = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
       const payload = {
         platform: '#KYV_WebForm',
@@ -136,7 +141,6 @@ const UserForm = () => {
         throw new Error(`Server error (${response.status}): ${responseText}`);
       }
 
-      // Parse JSON trả về từ Worker để lấy mã ticket và đường dẫn
       let resultData = {};
       try {
         resultData = JSON.parse(responseText);
@@ -144,22 +148,28 @@ const UserForm = () => {
         console.warn("Không parse được JSON từ response text");
       }
 
-      // Lưu lại thông tin ticket để hiển thị màn hình thành công
+      const ticketNum = resultData.ticketNumber || 'N/A';
+      const ticketUrl = ticketNum !== 'N/A' 
+        ? `https://help.kohyoung.com/a/tickets/${ticketNum}` 
+        : (resultData.ticketUrl || '');
+
       setSubmittedTicket({
-        ticketNumber: resultData.ticketNumber || 'N/A',
-        ticketUrl: resultData.ticketUrl || ''
+        ticketNumber: ticketNum,
+        ticketUrl: ticketUrl
       });
 
       showSnackbarMsg('Gửi thông tin thành công / Submission successful!', 'success');
       
-      // Reset form trạng thái
       setFormData({ subject: '', requester: '', company: '', serialNumber: '', email: '', note: '', isMesRelated: false, images: [] });
       setImagePreviews([]);
+      setCopied(false);
       setIsReviewing(false);
       scrollToTop();
     } catch (error) {
       console.error('LỖI CHI TIẾT TẠI executeSubmit:', error);
       showSnackbarMsg(`Lỗi: ${error.message || 'Có lỗi xảy ra'}`, 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -177,8 +187,23 @@ const UserForm = () => {
     }
   };
 
+  const handleCopyUrl = () => {
+    if (submittedTicket && submittedTicket.ticketUrl) {
+      navigator.clipboard.writeText(submittedTicket.ticketUrl)
+        .then(() => {
+          setCopied(true);
+          showSnackbarMsg('Đã copy đường dẫn Ticket!', 'success');
+          setTimeout(() => setCopied(false), 2500);
+        })
+        .catch(err => {
+          console.error('Không copy được:', err);
+        });
+    }
+  };
+
   const handleResetForm = () => {
     setSubmittedTicket(null);
+    setCopied(false);
     scrollToTop();
   };
 
@@ -214,7 +239,7 @@ const UserForm = () => {
       {/* Form Container chính */}
       <div style={{ width: '100%', maxWidth: '650px', margin: '0 auto', backgroundColor: '#ffffff', padding: '20px 16px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', textAlign: 'left', boxSizing: 'border-box' }}>
         
-        {/* Logo & Tiêu đề giữ căn giữa */}
+        {/* Logo & Tiêu đề */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
           <img src={kohyoungLogo} alt="Kohyoung Logo" style={{ height: '40px', objectFit: 'contain' }} />
         </div>
@@ -230,18 +255,37 @@ const UserForm = () => {
         </div>
 
         {submittedTicket ? (
-          /* MÀN HÌNH HIỂN THỊ KHI GỬI THÀNH CÔNG (GỌN GÀNG, CHUYÊN NGHIỆP) */
+          /* MÀN HÌNH KẾT QUẢ THÀNH CÔNG */
           <div style={{ textAlign: 'center', padding: '15px 0' }}>
-            <h3 style={{ color: '#27ae60', marginBottom: '6px', fontSize: '18px', fontWeight: '600' }}>Gửi yêu cầu thành công</h3>
-            <p style={{ color: '#666', fontSize: '13px', marginBottom: '20px' }}>Yêu cầu hỗ trợ của bạn đã được ghi nhận vào hệ thống Helpdesk.</p>
-            
             <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', marginBottom: '24px', textAlign: 'left' }}>
-              <div style={{ marginBottom: '10px', fontSize: '14px' }}>
+              <div style={{ marginBottom: '12px', fontSize: '14px' }}>
                 <b>Mã Ticket / Ticket Number:</b> <span style={{ color: '#2563eb', fontWeight: 'bold' }}>{submittedTicket.ticketNumber}</span>
               </div>
               {submittedTicket.ticketUrl ? (
-                <div style={{ fontSize: '14px', wordBreak: 'break-all' }}>
-                  <b>Đường dẫn Ticket / Link:</b> <a href={submittedTicket.ticketUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>Xem chi tiết Ticket trên hệ thống</a>
+                <div>
+                  <div style={{ fontSize: '14px', wordBreak: 'break-all', marginBottom: '10px' }}>
+                    <b>Đường dẫn Ticket / Link:</b> <a href={submittedTicket.ticketUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>Xem chi tiết Ticket trên SharePoint/List</a>
+                  </div>
+                  <button 
+                    type="button"
+                    onClick={handleCopyUrl}
+                    style={{
+                      padding: '6px 12px',
+                      backgroundColor: copied ? '#10b981' : '#e2e8f0',
+                      color: copied ? '#ffffff' : '#334155',
+                      border: 'none',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      transition: 'background-color 0.2s'
+                    }}
+                  >
+                    {copied ? '✓ Đã Copy URL' : '📋 Copy URL Ticket'}
+                  </button>
                 </div>
               ) : (
                 <div style={{ fontSize: '13px', color: '#888', fontStyle: 'italic' }}>Đang khởi tạo liên kết ticket...</div>
@@ -257,7 +301,7 @@ const UserForm = () => {
           </div>
         ) : isReviewing ? (
           /* MÀN HÌNH REVIEW TRƯỚC KHI GỬI */
-          <div>
+          <div style={{ opacity: isSubmitting ? 0.6 : 1, pointerEvents: isSubmitting ? 'none' : 'auto' }}>
             <div style={{ marginBottom: '16px', textAlign: 'center' }}>
               <h3 style={{ color: '#333', fontWeight: 'bold', marginBottom: '4px' }}>Kiểm tra lại thông tin</h3>
               <span style={{ fontSize: '13px', color: '#666', fontWeight: '500' }}>Review Information</span>
@@ -285,16 +329,20 @@ const UserForm = () => {
 
             <div style={{ display: 'flex', gap: '10px' }}>
               <button 
+                type="button"
+                disabled={isSubmitting}
                 onClick={() => { setIsReviewing(false); setTimeout(scrollToTop, 50); }} 
-                style={{ flex: 1, padding: '12px', backgroundColor: '#4b5563', color: '#ffffff', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                style={{ flex: 1, padding: '12px', backgroundColor: '#4b5563', color: '#ffffff', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
               >
                 Back
               </button>
               <button 
+                type="button"
+                disabled={isSubmitting}
                 onClick={executeSubmit} 
-                style={{ flex: 1, padding: '12px', backgroundColor: '#6CBC6C', color: '#ffffff', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                style={{ flex: 1, padding: '12px', backgroundColor: isSubmitting ? '#93c5fd' : '#6CBC6C', color: '#ffffff', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: isSubmitting ? 'wait' : 'pointer' }}
               >
-                Send
+                {isSubmitting ? 'Đang gửi yêu cầu... / Submitting...' : 'Send'}
               </button>
             </div>
           </div>
