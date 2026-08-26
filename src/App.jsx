@@ -41,7 +41,6 @@ const UserForm = () => {
       serialNumber: 'Serial Number Máy',
       attachImages: 'Đính kèm hình ảnh',
       selectImages: 'Chọn hình ảnh',
-      pasteHint: '💡 Mẹo: Bạn có thể bấm Ctrl+V để dán trực tiếp hình ảnh vào ô mô tả bên dưới!',
       mesCheck: 'Có phải liên quan tới MES không? (KY-MES, BRM, SECGEM, kbr AutoExport, API)',
       subject: 'Tiêu đề vấn đề',
       description: 'Mô tả lỗi / vấn đề / câu hỏi',
@@ -77,7 +76,6 @@ const UserForm = () => {
       serialNumber: 'Machine Serial Number',
       attachImages: 'Attach Images',
       selectImages: 'Select Images',
-      pasteHint: '💡 Tip: You can press Ctrl+V to paste screenshots directly into the description box below!',
       mesCheck: 'MES issue? (KY-MES, BRM, SECGEM, kbr AutoExport, API)',
       subject: 'Subject',
       description: 'Description / Issue Details',
@@ -113,7 +111,6 @@ const UserForm = () => {
       serialNumber: '机器 Serial Number',
       attachImages: '附件图片',
       selectImages: '选择图片',
-      pasteHint: '💡 提示：您可以按 Ctrl+V 直接将截图粘贴到下方的描述框中！',
       mesCheck: '是否与 MES 相关？ (KY-MES, BRM, SECGEM, kbr AutoExport, API)',
       subject: '主题',
       description: '问题描述',
@@ -149,7 +146,6 @@ const UserForm = () => {
       serialNumber: '장비 Serial Number',
       attachImages: '이미지 첨부',
       selectImages: '이미지 선택',
-      pasteHint: '💡 팁: 아래 설명란에 Ctrl+V를 눌러 스크린샷을 바로 붙여넣을 수 있습니다!',
       mesCheck: 'MES 관련 이슈인가요? (KY-MES, BRM, SECGEM, kbr AutoExport, API)',
       subject: '제목',
       description: '문제 설명',
@@ -213,7 +209,6 @@ const UserForm = () => {
     }
   };
 
-  // Hàm xử lý file ảnh chung (dùng cho cả chọn file và paste Ctrl+V)
   const processImageFile = (file) => {
     const reader = new FileReader();
     reader.onload = (uploadEvent) => {
@@ -265,7 +260,6 @@ const UserForm = () => {
     e.target.value = '';
   };
 
-  // Hỗ trợ tính năng Paste (Ctrl+V) ảnh trực tiếp vào ô textarea
   const handlePaste = (e) => {
     const items = e.clipboardData?.items;
     if (!items) return;
@@ -274,9 +268,9 @@ const UserForm = () => {
       if (items[i].type.indexOf('image') !== -1) {
         const blob = items[i].getAsFile();
         if (blob) {
-          e.preventDefault(); // Chặn hành vi mặc định nếu cần
+          e.preventDefault();
           processImageFile(blob);
-          showSnackbarMsg('Đã dán hình ảnh từ clipboard thành công!', 'success');
+          // Đã lược bỏ gọi hàm thông báo (showSnackbarMsg) khi dán ảnh
         }
       }
     }
@@ -389,7 +383,6 @@ const UserForm = () => {
     <div style={{ backgroundColor: '#f4f6f5', minHeight: '100vh', padding: '16px 8px', boxSizing: 'border-box' }}>
       <div ref={topRef} />
 
-      {/* Snackbar thông báo */}
       {snackbar.show && (
         <div style={{
           position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)',
@@ -400,7 +393,6 @@ const UserForm = () => {
         </div>
       )}
 
-      {/* Modal xác nhận */}
       {showConfirmModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 999, padding: '15px', boxSizing: 'border-box' }}>
           <div style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '8px', width: '100%', maxWidth: '400px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', boxSizing: 'border-box' }}>
@@ -414,21 +406,18 @@ const UserForm = () => {
         </div>
       )}
 
-      {/* Form Container chính */}
       <div style={{ width: '100%', maxWidth: '650px', margin: '0 auto', backgroundColor: '#ffffff', padding: '20px 16px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', textAlign: 'left', boxSizing: 'border-box' }}>
         
-        {/* Phần Header: Logo ở giữa & Icon nút ngôn ngữ dạng Dropdown hàng dọc ở góc phải */}
         <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '16px' }}>
           <img src={kohyoungLogo} alt="Kohyoung Logo" style={{ height: '40px', objectFit: 'contain' }} />
 
-          {/* Dropdown Menu Ngôn ngữ */}
           <div ref={langMenuRef} style={{ position: 'absolute', right: 0 }}>
             <button
               type="button"
               onClick={() => setShowLangMenu(!showLangMenu)}
               style={{
                 display: 'flex',
-                alignItem: 'center',
+                alignItems: 'center',
                 gap: '4px',
                 padding: '6px 10px',
                 fontSize: '13px',
@@ -498,7 +487,6 @@ const UserForm = () => {
         </div>
 
         {submittedTicket ? (
-          /* MÀN HÌNH KẾT QUẢ THÀNH CÔNG */
           <div style={{ textAlign: 'center', padding: '15px 0' }}>
             <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', marginBottom: '24px', textAlign: 'left' }}>
               <div style={{ marginBottom: '12px', fontSize: '14px' }}>
@@ -542,7 +530,6 @@ const UserForm = () => {
             </button>
           </div>
         ) : isReviewing ? (
-          /* MÀN HÌNH REVIEW TRƯỚC KHI GỬI */
           <div style={{ opacity: isSubmitting ? 0.6 : 1, pointerEvents: isSubmitting ? 'none' : 'auto' }}>
             <div style={{ marginBottom: '16px', textAlign: 'center' }}>
               <h3 style={{ color: '#333', fontWeight: 'bold', marginBottom: '4px' }}>{currentTexts.reviewTitle}</h3>
@@ -588,7 +575,6 @@ const UserForm = () => {
             </div>
           </div>
         ) : (
-          /* MÀN HÌNH FORM NHẬP LIỆU CHÍNH */
           <div>
             <div style={{ marginBottom: '18px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>
@@ -640,9 +626,6 @@ const UserForm = () => {
               >
                 📷 {currentTexts.selectImages}
               </button>
-              <span style={{ fontSize: '11px', color: '#666', fontStyle: 'italic', display: 'block', marginBottom: '8px' }}>
-                {currentTexts.pasteHint}
-              </span>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {imagePreviews.map((src, index) => (
