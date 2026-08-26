@@ -226,8 +226,8 @@ const UserForm = () => {
       {showConfirmModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 999, padding: '15px', boxSizing: 'border-box' }}>
           <div style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '8px', width: '100%', maxWidth: '400px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', boxSizing: 'border-box' }}>
-            <h3 style={{ margin: '0 0 10px 0', fontSize: '18px', color: '#333' }}>Xác nhận / Confirmation</h3>
-            <p style={{ margin: '0 0 20px 0', color: '#666', fontSize: '14px', lineHeight: '1.5' }}>Bạn chưa đính kèm hình ảnh. Bạn có muốn tiếp tục không? / No images attached. Do you want to continue?</p>
+            <h3 style={{ margin: '0 0 10px 0', fontSize: '18px', color: '#333' }}>Xác nhận / Confirmation / 确认</h3>
+            <p style={{ margin: '0 0 20px 0', color: '#666', fontSize: '14px', lineHeight: '1.5' }}>Bạn chưa đính kèm hình ảnh. Bạn có muốn tiếp tục không? / No images attached. Do you want to continue? / 您尚未附加图片。是否继续？</p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button onClick={() => setShowConfirmModal(false)} style={{ padding: '8px 16px', border: '1px solid #ccc', background: '#fff', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
               <button onClick={() => { setShowConfirmModal(false); setIsReviewing(true); setTimeout(scrollToTop, 50); }} style={{ padding: '8px 16px', background: '#6CBC6C', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>OK</button>
@@ -250,7 +250,7 @@ const UserForm = () => {
 
         <div style={{ marginBottom: '24px', textAlign: 'center' }}>
           <span style={{ fontSize: '11px', color: '#7f8c8d', fontStyle: 'italic', display: 'block', padding: '0 5px' }}>
-            * là phần bắt buộc phải điền / Required fields / *표시된 항목은 필수 입력 항목입니다
+            * là phần bắt buộc phải điền / Required fields / * 为必填项
           </span>
         </div>
 
@@ -259,7 +259,7 @@ const UserForm = () => {
           <div style={{ textAlign: 'center', padding: '15px 0' }}>
             <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', marginBottom: '24px', textAlign: 'left' }}>
               <div style={{ marginBottom: '12px', fontSize: '14px' }}>
-                <b>Mã Ticket / Ticket Number:</b> <span style={{ color: '#2563eb', fontWeight: 'bold' }}>{submittedTicket.ticketNumber}</span>
+                <b>Mã Ticket / Ticket Number / 工单号:</b> <span style={{ color: '#2563eb', fontWeight: 'bold' }}>{submittedTicket.ticketNumber}</span>
               </div>
               {submittedTicket.ticketUrl ? (
                 <div>
@@ -296,7 +296,7 @@ const UserForm = () => {
               onClick={handleResetForm}
               style={{ width: '100%', padding: '12px', backgroundColor: '#6CBC6C', color: '#ffffff', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '15px' }}
             >
-              Gửi yêu cầu khác / Submit Another Request
+              Gửi yêu cầu khác / Submit Another Request / 提交其他请求
             </button>
           </div>
         ) : isReviewing ? (
@@ -304,19 +304,19 @@ const UserForm = () => {
           <div style={{ opacity: isSubmitting ? 0.6 : 1, pointerEvents: isSubmitting ? 'none' : 'auto' }}>
             <div style={{ marginBottom: '16px', textAlign: 'center' }}>
               <h3 style={{ color: '#333', fontWeight: 'bold', marginBottom: '4px' }}>Kiểm tra lại thông tin</h3>
-              <span style={{ fontSize: '13px', color: '#666', fontWeight: '500' }}>Review Information</span>
+              <span style={{ fontSize: '13px', color: '#666', fontWeight: '500' }}>Review Information / 确认信息</span>
             </div>
 
             <div style={{ marginBottom: '20px', padding: '14px', backgroundColor: '#f9f9f9', borderRadius: '8px', border: '1px solid #e0e0e0', wordBreak: 'break-word', boxSizing: 'border-box' }}>
-              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Tên người yêu cầu / Requester:</b> {formData.requester}</div>
-              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Tên công ty / Company:</b> {formData.company}</div>
-              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Email:</b> {formData.email}</div>
-              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Serial Number Máy / Machine Serial:</b> {formData.serialNumber || '(Không có / None)'}</div>
-              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Liên quan tới MES / MES issue:</b> {formData.isMesRelated ? 'Có / Yes' : 'Không / No'}</div>
-              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Tiêu đề vấn đề / Subject:</b> {formData.subject}</div>
-              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Mô tả lỗi / Description:</b> {formData.note}</div>
+              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Tên người yêu cầu / Requester / 提单人:</b> {formData.requester}</div>
+              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Tên công ty / Company / 公司名称:</b> {formData.company}</div>
+              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Email / 邮箱:</b> {formData.email}</div>
+              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Serial Number Máy / Machine Serial / 机器序列号:</b> {formData.serialNumber || '(Không có / None / 无)'}</div>
+              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Liên quan tới MES / MES issue / MES相关:</b> {formData.isMesRelated ? 'Có / Yes / 是' : 'Không / No / 否'}</div>
+              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Tiêu đề vấn đề / Subject / 主题:</b> {formData.subject}</div>
+              <div style={{ marginBottom: '8px', fontSize: '13px' }}><b>Mô tả lỗi / Description / 问题描述:</b> {formData.note}</div>
               <div>
-                <span style={{ fontSize: '13px' }}><b>Hình ảnh đính kèm / Attached Images:</b> {imagePreviews.length} ảnh / images</span>
+                <span style={{ fontSize: '13px' }}><b>Hình ảnh đính kèm / Attached Images / 附件图片:</b> {imagePreviews.length} ảnh / images / 张</span>
                 {imagePreviews.length > 0 && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '8px' }}>
                     {imagePreviews.map((src, index) => (
@@ -334,7 +334,7 @@ const UserForm = () => {
                 onClick={() => { setIsReviewing(false); setTimeout(scrollToTop, 50); }} 
                 style={{ flex: 1, padding: '12px', backgroundColor: '#4b5563', color: '#ffffff', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
               >
-                Back
+                Back / 返回
               </button>
               <button 
                 type="button"
@@ -342,7 +342,7 @@ const UserForm = () => {
                 onClick={executeSubmit} 
                 style={{ flex: 1, padding: '12px', backgroundColor: isSubmitting ? '#93c5fd' : '#6CBC6C', color: '#ffffff', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: isSubmitting ? 'wait' : 'pointer' }}
               >
-                {isSubmitting ? 'Đang gửi yêu cầu... / Submitting...' : 'Send'}
+                {isSubmitting ? 'Đang gửi yêu cầu... / Submitting... / 正在提交...' : 'Send / 发送'}
               </button>
             </div>
           </div>
@@ -350,30 +350,40 @@ const UserForm = () => {
           /* MÀN HÌNH FORM NHẬP LIỆU CHÍNH */
           <div>
             <div style={{ marginBottom: '18px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Tên người yêu cầu (Requester) *</label>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>
+                Tên người yêu cầu (Requester / 提单人) *
+              </label>
               <input type="text" value={formData.requester} onChange={(e) => handleChange('requester', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none', fontSize: '16px' }} />
             </div>
 
             <div style={{ marginBottom: '18px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Tên công ty (Company) *</label>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>
+                Tên công ty (Company / 公司名称) *
+              </label>
               <input type="text" value={formData.company} onChange={(e) => handleChange('company', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none', fontSize: '16px' }} />
             </div>
 
             <div style={{ marginBottom: '18px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Email *</label>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>
+                Email / 邮箱 *
+              </label>
               <input type="email" value={formData.email} onChange={(e) => handleChange('email', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none', fontSize: '16px' }} />
               <span style={{ fontSize: '11px', color: '#666', fontStyle: 'italic', marginTop: '4px', display: 'block' }}>
-                * Vui lòng dùng email thật để nhận phản hồi kịp thời / Please use a valid email for timely feedback.
+                * Vui lòng dùng email thật để nhận phản hồi kịp thời / Please use a valid email for timely feedback / 请使用真实邮箱以便及时收到回复
               </span>
             </div>
 
             <div style={{ marginBottom: '18px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Serial Number Máy (Machine Serial Number)</label>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>
+                Serial Number Máy (Machine Serial Number / 机器序列号)
+              </label>
               <input type="text" value={formData.serialNumber} onChange={(e) => handleChange('serialNumber', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none', fontSize: '16px' }} />
             </div>
 
             <div style={{ marginBottom: '18px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Đính kèm hình ảnh (Attach Images)</label>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>
+                Đính kèm hình ảnh (Attach Images / 附件图片)
+              </label>
               <input 
                 type="file" 
                 ref={fileInputRef} 
@@ -387,7 +397,7 @@ const UserForm = () => {
                 onClick={handleTriggerSelectImage} 
                 style={{ marginBottom: '10px', backgroundColor: '#e2e8f0', color: '#1e293b', fontWeight: 'bold', width: '100%', padding: '11px', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
               >
-                📷 Chọn hình ảnh / Select Images
+                📷 Chọn hình ảnh / Select Images / 选择图片
               </button>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -408,17 +418,21 @@ const UserForm = () => {
                 style={{ width: '20px', height: '20px', cursor: 'pointer', accentColor: '#6CBC6C', marginTop: '2px', flexShrink: 0 }}
               />
               <span style={{ fontSize: '13px', fontWeight: '500', color: '#333', lineHeight: '1.4' }}>
-                Có phải liên quan tới MES không / MES issue? (KY-MES, BRM, SECGEM, kbr AutoExport, API)
+                Có phải liên quan tới MES không / MES issue? / 是否与MES相关？ (KY-MES, BRM, SECGEM, kbr AutoExport, API)
               </span>
             </div>
 
             <div style={{ marginBottom: '18px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Tiêu đề vấn đề (Subject) *</label>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>
+                Tiêu đề vấn đề (Subject / 主题) *
+              </label>
               <input type="text" value={formData.subject} onChange={(e) => handleChange('subject', e.target.value)} style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', outline: 'none', fontSize: '16px' }} />
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>Mô tả lỗi / vấn đề / câu hỏi (Description) *</label>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px', color: '#333' }}>
+                Mô tả lỗi / vấn đề / câu hỏi (Description / 问题描述) *
+              </label>
               <textarea 
                 value={formData.note} 
                 onChange={(e) => handleChange('note', e.target.value)} 
@@ -433,7 +447,7 @@ const UserForm = () => {
               onClick={handleSubmit} 
               style={{ width: '100%', padding: '13px', backgroundColor: '#6CBC6C', color: '#ffffff', fontWeight: 'bold', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '15px' }}
             >
-              Gửi / Submit
+              Gửi / Submit / 提交
             </button>
           </div>
         )}
