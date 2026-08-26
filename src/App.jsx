@@ -263,11 +263,8 @@ const UserForm = () => {
               </div>
               {submittedTicket.ticketUrl ? (
                 <div>
-                  <div style={{ fontSize: '14px', wordBreak: 'break-all', marginBottom: '10px' }}>
-                    <b>Đường dẫn Ticket / Link:</b>{' '}
-                    <span style={{ color: '#334155', userSelect: 'all', cursor: 'default' }}>
-                      {submittedTicket.ticketUrl}
-                    </span>
+                  <div style={{ fontSize: '14px', wordBreak: 'break-all', marginBottom: '10px', color: '#334155', userSelect: 'all', cursor: 'default' }}>
+                    {submittedTicket.ticketUrl}
                   </div>
                   <button 
                     type="button"
