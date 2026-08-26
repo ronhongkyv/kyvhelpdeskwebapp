@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import kohyoungLogo from '../logo/KohyoungLogo.jpg';
 
 const UserForm = () => {
   const [lang, setLang] = useState('VIE'); // Mặc định tiếng Việt: VIE, ENG, CHN, KOR
+  const [showLangMenu, setShowLangMenu] = useState(false); // Trạng thái mở/đóng menu chọn ngôn ngữ
 
   const [formData, setFormData] = useState({
     subject: '',
@@ -26,6 +27,7 @@ const UserForm = () => {
   
   const topRef = useRef(null);
   const fileInputRef = useRef(null);
+  const langMenuRef = useRef(null);
 
   // Từ điển đa ngôn ngữ
   const t = {
@@ -39,10 +41,11 @@ const UserForm = () => {
       serialNumber: 'Serial Number Máy',
       attachImages: 'Đính kèm hình ảnh',
       selectImages: 'Chọn hình ảnh',
+      pasteHint: '💡 Mẹo: Bạn có thể bấm Ctrl+V để dán trực tiếp hình ảnh vào ô mô tả bên dưới!',
       mesCheck: 'Có phải liên quan tới MES không? (KY-MES, BRM, SECGEM, kbr AutoExport, API)',
       subject: 'Tiêu đề vấn đề',
       description: 'Mô tả lỗi / vấn đề / câu hỏi',
-      descPlaceholder: 'Vui lòng mô tả chi tiết vấn đề, yêu cầu và câu hỏi bạn gặp phải...',
+      descPlaceholder: 'Vui lòng mô tả chi tiết vấn đề, yêu cầu và câu hỏi bạn gặp phải... (Có thể dán ảnh trực tiếp Ctrl+V)',
       submit: 'Gửi',
       submitting: 'Đang gửi yêu cầu...',
       reviewTitle: 'Kiểm tra lại thông tin',
@@ -74,10 +77,11 @@ const UserForm = () => {
       serialNumber: 'Machine Serial Number',
       attachImages: 'Attach Images',
       selectImages: 'Select Images',
+      pasteHint: '💡 Tip: You can press Ctrl+V to paste screenshots directly into the description box below!',
       mesCheck: 'MES issue? (KY-MES, BRM, SECGEM, kbr AutoExport, API)',
       subject: 'Subject',
       description: 'Description / Issue Details',
-      descPlaceholder: 'Please describe the problem, request, or question in detail...',
+      descPlaceholder: 'Please describe the problem, request, or question in detail... (Paste images with Ctrl+V)',
       submit: 'Submit',
       submitting: 'Submitting...',
       reviewTitle: 'Review Information',
@@ -109,10 +113,11 @@ const UserForm = () => {
       serialNumber: '机器 Serial Number',
       attachImages: '附件图片',
       selectImages: '选择图片',
+      pasteHint: '💡 提示：您可以按 Ctrl+V 直接将截图粘贴到下方的描述框中！',
       mesCheck: '是否与 MES 相关？ (KY-MES, BRM, SECGEM, kbr AutoExport, API)',
       subject: '主题',
       description: '问题描述',
-      descPlaceholder: '请详细描述您遇到的问题、需求或疑问...',
+      descPlaceholder: '请详细描述您遇到的问题、需求或疑问... (支持 Ctrl+V 粘贴截图)',
       submit: '提交',
       submitting: '正在提交...',
       reviewTitle: '确认信息',
@@ -144,10 +149,11 @@ const UserForm = () => {
       serialNumber: '장비 Serial Number',
       attachImages: '이미지 첨부',
       selectImages: '이미지 선택',
+      pasteHint: '💡 팁: 아래 설명란에 Ctrl+V를 눌러 스크린샷을 바로 붙여넣을 수 있습니다!',
       mesCheck: 'MES 관련 이슈인가요? (KY-MES, BRM, SECGEM, kbr AutoExport, API)',
       subject: '제목',
       description: '문제 설명',
-      descPlaceholder: '문제, 요청 사항 또는 질문을 자세히 설명해 주세요...',
+      descPlaceholder: '문제, 요청 사항 또는 질문을 자세히 설명해 주세요... (Ctrl+V로 이미지 붙여넣기 가능)',
       submit: '제출',
       submitting: '제출 중...',
       reviewTitle: '정보 확인',
@@ -173,6 +179,17 @@ const UserForm = () => {
 
   const currentTexts = t[lang];
 
+  // Đóng menu ngôn ngữ khi click ra ngoài
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (langMenuRef.current && !langMenuRef.current.contains(event.target)) {
+        setShowLangMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const showSnackbarMsg = (text, type = 'success') => {
     setSnackbar({ show: true, text, type });
     setTimeout(() => {
@@ -196,56 +213,73 @@ const UserForm = () => {
     }
   };
 
+  // Hàm xử lý file ảnh chung (dùng cho cả chọn file và paste Ctrl+V)
+  const processImageFile = (file) => {
+    const reader = new FileReader();
+    reader.onload = (uploadEvent) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 1024;
+        const MAX_HEIGHT = 1024;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+        setImagePreviews((prev) => [...prev, compressedBase64]);
+        setFormData((prev) => ({
+          ...prev,
+          images: [
+            ...prev.images,
+            { name: file.name || `pasted_image_${Date.now()}.jpg`, type: 'image/jpeg', content: compressedBase64 }
+          ],
+        }));
+      };
+      img.src = uploadEvent.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (uploadEvent) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 1024;
-          const MAX_HEIGHT = 1024;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-
-          setImagePreviews((prev) => [...prev, compressedBase64]);
-
-          setFormData((prev) => ({
-            ...prev,
-            images: [
-              ...prev.images,
-              { name: file.name, type: 'image/jpeg', content: compressedBase64 }
-            ],
-          }));
-        };
-        img.src = uploadEvent.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-
+    files.forEach((file) => processImageFile(file));
     e.target.value = '';
+  };
+
+  // Hỗ trợ tính năng Paste (Ctrl+V) ảnh trực tiếp vào ô textarea
+  const handlePaste = (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        const blob = items[i].getAsFile();
+        if (blob) {
+          e.preventDefault(); // Chặn hành vi mặc định nếu cần
+          processImageFile(blob);
+          showSnackbarMsg('Đã dán hình ảnh từ clipboard thành công!', 'success');
+        }
+      }
+    }
   };
 
   const handleRemoveImage = (indexToRemove) => {
@@ -383,33 +417,74 @@ const UserForm = () => {
       {/* Form Container chính */}
       <div style={{ width: '100%', maxWidth: '650px', margin: '0 auto', backgroundColor: '#ffffff', padding: '20px 16px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', textAlign: 'left', boxSizing: 'border-box' }}>
         
-        {/* Phần Header: Đưa thanh chọn ngôn ngữ lên trên cùng, căn phải gọn gàng, không bị tràn viền trên mobile */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px', marginBottom: '12px' }}>
-          {['VIE', 'ENG', 'CHN', 'KOR'].map((item) => (
+        {/* Phần Header: Logo ở giữa & Icon nút ngôn ngữ dạng Dropdown hàng dọc ở góc phải */}
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '16px' }}>
+          <img src={kohyoungLogo} alt="Kohyoung Logo" style={{ height: '40px', objectFit: 'contain' }} />
+
+          {/* Dropdown Menu Ngôn ngữ */}
+          <div ref={langMenuRef} style={{ position: 'absolute', right: 0 }}>
             <button
-              key={item}
               type="button"
-              onClick={() => setLang(item)}
+              onClick={() => setShowLangMenu(!showLangMenu)}
               style={{
-                padding: '4px 10px',
-                fontSize: '12px',
+                display: 'flex',
+                alignItem: 'center',
+                gap: '4px',
+                padding: '6px 10px',
+                fontSize: '13px',
                 fontWeight: 'bold',
-                borderRadius: '4px',
-                border: lang === item ? '1px solid #6CBC6C' : '1px solid #cbd5e1',
-                backgroundColor: lang === item ? '#6CBC6C' : '#f8fafc',
-                color: lang === item ? '#ffffff' : '#475569',
+                borderRadius: '6px',
+                border: '1px solid #cbd5e1',
+                backgroundColor: '#f8fafc',
+                color: '#334155',
                 cursor: 'pointer',
-                transition: 'all 0.2s'
+                boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
               }}
             >
-              {item}
+              🌐 {lang} ▾
             </button>
-          ))}
-        </div>
 
-        {/* Logo căn giữa nằm phía dưới nút ngôn ngữ */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
-          <img src={kohyoungLogo} alt="Kohyoung Logo" style={{ height: '40px', objectFit: 'contain' }} />
+            {showLangMenu && (
+              <div style={{
+                position: 'absolute',
+                right: 0,
+                top: 'calc(100% + 6px)',
+                backgroundColor: '#ffffff',
+                border: '1px solid #cbd5e1',
+                borderRadius: '6px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                zIndex: 50,
+                minWidth: '80px'
+              }}>
+                {['VIE', 'ENG', 'CHN', 'KOR'].map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => {
+                      setLang(item);
+                      setShowLangMenu(false);
+                    }}
+                    style={{
+                      padding: '8px 14px',
+                      fontSize: '13px',
+                      fontWeight: lang === item ? 'bold' : 'normal',
+                      border: 'none',
+                      backgroundColor: lang === item ? '#6CBC6C' : 'transparent',
+                      color: lang === item ? '#ffffff' : '#334155',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      transition: 'background 0.15s'
+                    }}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <h2 style={{ textAlign: 'center', color: '#2c3e50', fontWeight: 'bold', marginBottom: '6px', fontSize: '20px' }}>
@@ -561,10 +636,13 @@ const UserForm = () => {
               <button 
                 type="button" 
                 onClick={handleTriggerSelectImage} 
-                style={{ marginBottom: '10px', backgroundColor: '#e2e8f0', color: '#1e293b', fontWeight: 'bold', width: '100%', padding: '11px', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                style={{ marginBottom: '8px', backgroundColor: '#e2e8f0', color: '#1e293b', fontWeight: 'bold', width: '100%', padding: '11px', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
               >
                 📷 {currentTexts.selectImages}
               </button>
+              <span style={{ fontSize: '11px', color: '#666', fontStyle: 'italic', display: 'block', marginBottom: '8px' }}>
+                {currentTexts.pasteHint}
+              </span>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {imagePreviews.map((src, index) => (
@@ -602,6 +680,7 @@ const UserForm = () => {
               <textarea 
                 value={formData.note} 
                 onChange={(e) => handleChange('note', e.target.value)} 
+                onPaste={handlePaste}
                 rows={4}
                 placeholder={currentTexts.descPlaceholder}
                 style={{ width: '100%', padding: '11px', borderRadius: '6px', border: '1px solid #cbd5e1', boxSizing: 'border-box', fontFamily: 'inherit', outline: 'none', resize: 'vertical', fontSize: '16px' }}
