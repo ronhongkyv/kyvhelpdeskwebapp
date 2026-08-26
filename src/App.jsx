@@ -264,7 +264,10 @@ const UserForm = () => {
               {submittedTicket.ticketUrl ? (
                 <div>
                   <div style={{ fontSize: '14px', wordBreak: 'break-all', marginBottom: '10px' }}>
-                    <b>Đường dẫn Ticket / Link:</b> <a href={submittedTicket.ticketUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>Xem chi tiết Ticket trên SharePoint/List</a>
+                    <b>Đường dẫn Ticket / Link:</b>{' '}
+                    <span style={{ color: '#334155', userSelect: 'all', cursor: 'default' }}>
+                      {submittedTicket.ticketUrl}
+                    </span>
                   </div>
                   <button 
                     type="button"
@@ -284,7 +287,7 @@ const UserForm = () => {
                       transition: 'background-color 0.2s'
                     }}
                   >
-                    {copied ? '✓ Đã Copy URL' : '📋 Copy URL Ticket'}
+                    {copied ? '✓ Đã Copy URL' : 'Copy URL Ticket'}
                   </button>
                 </div>
               ) : (
