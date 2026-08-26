@@ -230,11 +230,10 @@ const UserForm = () => {
         </div>
 
         {submittedTicket ? (
-          /* MÀN HÌNH HIỂN THỊ KHI GỬI THÀNH CÔNG (CÓ TICKET) */
-          <div style={{ textAlign: 'center', padding: '20px 0' }}>
-            <div style={{ fontSize: '48px', marginBottom: '10px' }}>🎉</div>
-            <h3 style={{ color: '#27ae60', marginBottom: '8px' }}>Gửi yêu cầu thành công!</h3>
-            <p style={{ color: '#666', fontSize: '14px', marginBottom: '20px' }}>Yêu cầu hỗ trợ của bạn đã được ghi nhận vào hệ thống Helpdesk.</p>
+          /* MÀN HÌNH HIỂN THỊ KHI GỬI THÀNH CÔNG (GỌN GÀNG, CHUYÊN NGHIỆP) */
+          <div style={{ textAlign: 'center', padding: '15px 0' }}>
+            <h3 style={{ color: '#27ae60', marginBottom: '6px', fontSize: '18px', fontWeight: '600' }}>Gửi yêu cầu thành công</h3>
+            <p style={{ color: '#666', fontSize: '13px', marginBottom: '20px' }}>Yêu cầu hỗ trợ của bạn đã được ghi nhận vào hệ thống Helpdesk.</p>
             
             <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', marginBottom: '24px', textAlign: 'left' }}>
               <div style={{ marginBottom: '10px', fontSize: '14px' }}>
@@ -242,7 +241,7 @@ const UserForm = () => {
               </div>
               {submittedTicket.ticketUrl ? (
                 <div style={{ fontSize: '14px', wordBreak: 'break-all' }}>
-                  <b>Đường dẫn Ticket / Link:</b> <a href={submittedTicket.ticketUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>Xem chi tiết Ticket trên SharePoint/List</a>
+                  <b>Đường dẫn Ticket / Link:</b> <a href={submittedTicket.ticketUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>Xem chi tiết Ticket trên hệ thống</a>
                 </div>
               ) : (
                 <div style={{ fontSize: '13px', color: '#888', fontStyle: 'italic' }}>Đang khởi tạo liên kết ticket...</div>
