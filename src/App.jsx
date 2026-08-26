@@ -19,7 +19,6 @@ const UserForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [snackbar, setSnackbar] = useState({ show: false, text: '', type: '' });
   
-  // State lưu thông tin ticket trả về từ server
   const [submittedTicket, setSubmittedTicket] = useState(null);
   const [copied, setCopied] = useState(false);
   
@@ -126,8 +125,6 @@ const UserForm = () => {
         images: formData.images
       };
 
-      console.log('--- BẮT ĐẦU GỬI PAYLOAD ---', payload);
-
       const response = await fetch('https://kyv.kyv-helpdesk.workers.dev/submit-helpdesk', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -135,7 +132,6 @@ const UserForm = () => {
       });
 
       const responseText = await response.text();
-      console.log(`Phản hồi từ Worker [Status ${response.status}]:`, responseText);
 
       if (!response.ok) {
         throw new Error(`Server error (${response.status}): ${responseText}`);
@@ -158,7 +154,7 @@ const UserForm = () => {
         ticketUrl: ticketUrl
       });
 
-      showSnackbarMsg('Gửi thông tin thành công / Submission successful!', 'success');
+      showSnackbarMsg('Gửi thông tin thành công / Submission successful / 提交成功', 'success');
       
       setFormData({ subject: '', requester: '', company: '', serialNumber: '', email: '', note: '', isMesRelated: false, images: [] });
       setImagePreviews([]);
@@ -167,7 +163,7 @@ const UserForm = () => {
       scrollToTop();
     } catch (error) {
       console.error('LỖI CHI TIẾT TẠI executeSubmit:', error);
-      showSnackbarMsg(`Lỗi: ${error.message || 'Có lỗi xảy ra'}`, 'error');
+      showSnackbarMsg(`Lỗi / Error / 错误: ${error.message || 'Có lỗi xảy ra'}`, 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -175,7 +171,7 @@ const UserForm = () => {
 
   const handleSubmit = () => {
     if (!formData.requester || !formData.company || !formData.email || !formData.subject || !formData.note) {
-      showSnackbarMsg('Vui lòng điền đầy đủ các trường bắt buộc (*) / Please fill in all required fields (*)', 'warning');
+      showSnackbarMsg('Vui lòng điền đầy đủ các trường bắt buộc (*) / Please fill in all required fields (*) / 请填写所有必填字段 (*)', 'warning');
       return;
     }
 
@@ -192,7 +188,7 @@ const UserForm = () => {
       navigator.clipboard.writeText(submittedTicket.ticketUrl)
         .then(() => {
           setCopied(true);
-          showSnackbarMsg('Đã copy đường dẫn Ticket!', 'success');
+          showSnackbarMsg('Đã copy đường dẫn Ticket! / Ticket URL Copied! / 已复制工单链接！', 'success');
           setTimeout(() => setCopied(false), 2500);
         })
         .catch(err => {
@@ -229,8 +225,8 @@ const UserForm = () => {
             <h3 style={{ margin: '0 0 10px 0', fontSize: '18px', color: '#333' }}>Xác nhận / Confirmation / 确认</h3>
             <p style={{ margin: '0 0 20px 0', color: '#666', fontSize: '14px', lineHeight: '1.5' }}>Bạn chưa đính kèm hình ảnh. Bạn có muốn tiếp tục không? / No images attached. Do you want to continue? / 您尚未附加图片。是否继续？</p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button onClick={() => setShowConfirmModal(false)} style={{ padding: '8px 16px', border: '1px solid #ccc', background: '#fff', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={() => { setShowConfirmModal(false); setIsReviewing(true); setTimeout(scrollToTop, 50); }} style={{ padding: '8px 16px', background: '#6CBC6C', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>OK</button>
+              <button onClick={() => setShowConfirmModal(false)} style={{ padding: '8px 16px', border: '1px solid #ccc', background: '#fff', borderRadius: '4px', cursor: 'pointer' }}>Cancel / 取消</button>
+              <button onClick={() => { setShowConfirmModal(false); setIsReviewing(true); setTimeout(scrollToTop, 50); }} style={{ padding: '8px 16px', background: '#6CBC6C', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>OK / 确定</button>
             </div>
           </div>
         </div>
@@ -259,7 +255,7 @@ const UserForm = () => {
           <div style={{ textAlign: 'center', padding: '15px 0' }}>
             <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '16px', marginBottom: '24px', textAlign: 'left' }}>
               <div style={{ marginBottom: '12px', fontSize: '14px' }}>
-                <b>Mã Ticket / Ticket Number / 工单号:</b> <span style={{ color: '#2563eb', fontWeight: 'bold' }}>{submittedTicket.ticketNumber}</span>
+                <b>Mã Ticket / Ticket Number / 工单号:</b> <span style={{ color: '#6CBC6C', fontWeight: 'bold' }}>{submittedTicket.ticketNumber}</span>
               </div>
               {submittedTicket.ticketUrl ? (
                 <div>
@@ -271,8 +267,8 @@ const UserForm = () => {
                     onClick={handleCopyUrl}
                     style={{
                       padding: '6px 12px',
-                      backgroundColor: copied ? '#10b981' : '#e2e8f0',
-                      color: copied ? '#ffffff' : '#334155',
+                      backgroundColor: '#6CBC6C',
+                      color: '#ffffff',
                       border: 'none',
                       borderRadius: '4px',
                       fontSize: '12px',
@@ -284,11 +280,11 @@ const UserForm = () => {
                       transition: 'background-color 0.2s'
                     }}
                   >
-                    {copied ? '✓ Đã Copy URL' : 'Copy URL Ticket'}
+                    {copied ? '✓ Đã Copy URL / Copied / 已复制' : 'Copy URL Ticket / 复制链接'}
                   </button>
                 </div>
               ) : (
-                <div style={{ fontSize: '13px', color: '#888', fontStyle: 'italic' }}>Đang khởi tạo liên kết ticket...</div>
+                <div style={{ fontSize: '13px', color: '#888', fontStyle: 'italic' }}>Đang khởi tạo liên kết ticket... / Initializing ticket link... / 正在初始化工单链接...</div>
               )}
             </div>
 
