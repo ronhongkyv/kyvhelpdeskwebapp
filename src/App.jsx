@@ -383,33 +383,32 @@ const UserForm = () => {
       {/* Form Container chính */}
       <div style={{ width: '100%', maxWidth: '650px', margin: '0 auto', backgroundColor: '#ffffff', padding: '20px 16px', borderRadius: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', textAlign: 'left', boxSizing: 'border-box' }}>
         
-        {/* Bộ nút chọn ngôn ngữ (VIE, ENG, CHN, KOR) */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px', marginBottom: '14px' }}>
-          {['VIE', 'ENG', 'CHN', 'KOR'].map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setLang(item)}
-              style={{
-                padding: '4px 10px',
-                fontSize: '12px',
-                fontWeight: 'bold',
-                borderRadius: '4px',
-                border: lang === item ? '1px solid #6CBC6C' : '1px solid #cbd5e1',
-                backgroundColor: lang === item ? '#6CBC6C' : '#f8fafc',
-                color: lang === item ? '#ffffff' : '#475569',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-
-        {/* Logo & Tiêu đề */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+        {/* Phần Header: Logo ở giữa & Bộ nút ngôn ngữ nằm ngang hàng góc phải */}
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '16px' }}>
           <img src={kohyoungLogo} alt="Kohyoung Logo" style={{ height: '40px', objectFit: 'contain' }} />
+          
+          <div style={{ position: 'absolute', right: 0, display: 'flex', gap: '6px' }}>
+            {['VIE', 'ENG', 'CHN', 'KOR'].map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setLang(item)}
+                style={{
+                  padding: '4px 10px',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  borderRadius: '4px',
+                  border: lang === item ? '1px solid #6CBC6C' : '1px solid #cbd5e1',
+                  backgroundColor: lang === item ? '#6CBC6C' : '#f8fafc',
+                  color: lang === item ? '#ffffff' : '#475569',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
         </div>
 
         <h2 style={{ textAlign: 'center', color: '#2c3e50', fontWeight: 'bold', marginBottom: '6px', fontSize: '20px' }}>
