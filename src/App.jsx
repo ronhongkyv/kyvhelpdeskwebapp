@@ -290,6 +290,7 @@ const UserForm = () => {
     setIsSubmitting(true);
     try {
       const payload = {
+        zaloId: 'NA',
         platform: '#KYV_WebForm',
         subject: formData.subject,
         requester: formData.requester,
